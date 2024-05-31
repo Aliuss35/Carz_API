@@ -7,7 +7,11 @@ from django.shortcuts import get_object_or_404
 @api_view(['GET','POST'])
 def cars_list(request):
   if request.method == 'GET':
+    dealership_name = request.query_params.get('dealership')
+    print(dealership_name)
     cars = Car.objects.all()
+    if dealership_name:
+      cars = cars.filter(dealership__name=dealership_name)
     serializer = CarSerializer(cars, many=True)
     return Response(serializer.data)
   elif request.method == 'POST':
@@ -40,3 +44,5 @@ def car_detail(request, pk):#make this same with the <variable> in urls.py
   elif request.method == "DELETE":
     car.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+  
